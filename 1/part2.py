@@ -1,16 +1,24 @@
+import typing
+from part1 import calories
+
+
+def maxn(n : int, collection : typing.Iterator[int]) -> list[int]:
+    """Return the n biggest elements in collection."""
+    acc = [0] * n
+
+    for el in collection:
+        acc.append(el)
+        acc.remove(min(acc))
+
+    return acc
+
 def main():
     with open("input") as f:
-        max_calories = [0, 0, 0]
-        current_calories = 0
-        for line in f:
-            try:
-                current_calories += int(line.rstrip("\r\n"))
-            except ValueError:
-                max_calories.append(current_calories)
-                max_calories.remove(min(max_calories))
-                current_calories = 0
+        lines = (line.rstrip("\r\n") for line in f)
+        max_calories = maxn(3, calories(lines))
 
     print("Max calories:", sum(max_calories))
+
 
 if __name__ == "__main__":
     main()
