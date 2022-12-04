@@ -1,4 +1,8 @@
+import functools
+import pathlib
 import typing
+
+from advent2022 import compute
 
 
 def priority(item: chr) -> int:
@@ -12,21 +16,23 @@ def priority(item: chr) -> int:
 def priorities(items: set[chr]) -> int:
     return sum(priority(item) for item in items)
 
-def parse(lines: typing.Iterator[str]) -> set[chr]:
+def parse(lines: typing.Iterator[str]) -> typing.Iterator[set[chr]]:
     for line in lines:
         l = len(line)
         assert l % 2 == 0
         yield set(line[:(l//2)]).intersection(line[(l//2):])
 
+def process(data: typing.Iterator[set[chr]]) -> int:
+    return sum(priorities(items) for items in data)
+
+compute_part1 = functools.partial(compute, parse=parse, process=process)
+
 def main():
-    with open("input") as f:
-        lines = (line.rstrip("\r\n") for line in f)
+    inputpath = pathlib.Path(__file__).parent\
+        .joinpath("data", "input").absolute()
+    result = compute_part1(inputpath)
 
-        total_priorities = 0
-        for items in parse(lines):
-            total_priorities += priorities(items)
-
-    print("Total priorities", total_priorities)
+    print("Result", result)
 
 
 if __name__ == "__main__":

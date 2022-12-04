@@ -1,7 +1,10 @@
+import functools
 import itertools
+import pathlib
 import typing
 
-from part1 import priority
+from advent2022 import compute
+from advent2022.day3.part1 import priority
 
 
 def parse(lines: typing.Iterator[str]) -> typing.Iterator[chr]:
@@ -20,15 +23,17 @@ def parse(lines: typing.Iterator[str]) -> typing.Iterator[chr]:
         except ValueError:
             break
 
+def process(data: typing.Iterator[set[chr]]) -> int:
+    return sum(priority(item) for item in data)
+
+compute_part2 = functools.partial(compute, parse=parse, process=process)
+
 def main():
-    with open("input") as f:
-        lines = (line.rstrip("\r\n") for line in f)
+    inputpath = pathlib.Path(__file__).parent\
+        .joinpath("data", "input").absolute()
+    result = compute_part2(inputpath)
 
-        total_priorities = 0
-        for badge in parse(lines):
-            total_priorities += priority(badge)
-
-    print("Total priorities", total_priorities)
+    print("Result", result)
 
 
 if __name__ == "__main__":
