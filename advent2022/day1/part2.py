@@ -1,23 +1,23 @@
+import functools
+import heapq
+import pathlib
 import typing
-from part1 import calories
 
+from advent2022 import compute
+from advent2022.day1.part1 import parse
 
-def maxn(n : int, collection : typing.Iterator[int]) -> list[int]:
-    """Return the n biggest elements in collection."""
-    acc = [0] * n
+def process(data: typing.Iterator[int]) -> int:
+    three_largest = heapq.nlargest(3, data)
+    return sum(three_largest)
 
-    for el in collection:
-        acc.append(el)
-        acc.remove(min(acc))
-
-    return acc
+compute_part2 = functools.partial(compute, parse=parse, process=process)
 
 def main():
-    with open("input") as f:
-        lines = (line.rstrip("\r\n") for line in f)
-        max_calories = maxn(3, calories(lines))
+    inputpath = pathlib.Path(__file__).parent\
+        .joinpath("data", "input").absolute()
+    result = compute_part2(inputpath)
 
-    print("Max calories:", sum(max_calories))
+    print("Result", result)
 
 
 if __name__ == "__main__":

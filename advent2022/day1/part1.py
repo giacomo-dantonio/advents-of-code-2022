@@ -1,8 +1,11 @@
+import functools
+import pathlib
 import typing
 
+from advent2022 import compute
 
-def calories(lines : typing.Iterator[str]) -> typing.Iterator[int]:
-    """Compute the calories sum of the elements carried by each elf."""
+def parse(lines: typing.Iterator[str]) -> typing.Iterator[int]:
+    """Compute the calories of the elements carried by each elf."""
     partial_sum = 0
     for line in lines:
         try:
@@ -11,12 +14,17 @@ def calories(lines : typing.Iterator[str]) -> typing.Iterator[int]:
             yield partial_sum
             partial_sum = 0
 
-def main():
-    with open("input") as f:
-        lines = (line.rstrip("\r\n") for line in f)
-        max_calories = max(calories(lines))
+    if partial_sum > 0:
+        yield partial_sum
 
-    print("Max calories:", max_calories)
+compute_part1 = functools.partial(compute, parse=parse, process=max)
+
+def main():
+    inputpath = pathlib.Path(__file__).parent\
+        .joinpath("data", "input").absolute()
+    result = compute_part1(inputpath)
+
+    print("Result", result)
 
 
 if __name__ == "__main__":

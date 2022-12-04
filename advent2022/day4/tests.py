@@ -4,7 +4,7 @@ import unittest
 from advent2022.day4.part1 import compute_part1
 from advent2022.day4.part2 import compute_part2
 
-class ComputeTest(unittest.TestCase):
+class Day4Test(unittest.TestCase):
     inputpath = pathlib.Path(__file__).parent\
         .joinpath("data", "test_input").absolute()
 
