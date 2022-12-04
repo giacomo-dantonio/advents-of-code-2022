@@ -1,36 +1,34 @@
+import functools
+import pathlib
 import typing
-from part1 import ROCK, PAPER, SCISSORS, parse_choice, round_score
+
+from advent2022 import compute
+from advent2022.day2.part1 import ROCK, PAPER, SCISSORS, parse_choice, process
+
 
 LOOSE = "X"
 DRAW = "Y"
 WIN = "Z"
 
-def win_move(opponent_move):
-    if opponent_move == ROCK:
-        return PAPER
-    elif opponent_move == PAPER:
-        return SCISSORS
-    else:
-        return ROCK
+win_move = {
+    ROCK: PAPER,
+    PAPER: SCISSORS,
+    SCISSORS: ROCK
+}
 
-def loose_move(opponent_move):
-    if opponent_move == ROCK:
-        return SCISSORS
-    elif opponent_move == PAPER:
-        return ROCK
-    else:
-        return PAPER
-
-def draw_move(opponent_move):
-    return opponent_move
+loose_move = {
+    ROCK: SCISSORS,
+    PAPER: ROCK,
+    SCISSORS: PAPER
+}
 
 def compute_move(opponent_move, expected_outcome):
     if expected_outcome == WIN:
-        return win_move(opponent_move)
+        return win_move.get(opponent_move)
     elif expected_outcome == DRAW:
-        return draw_move(opponent_move)
+        return opponent_move
     else:
-        return loose_move(opponent_move)
+        return loose_move.get(opponent_move)
 
 def parse(lines: typing.Iterator[str]) -> typing.Iterator[dict[str, str]]:
     for line in lines:
@@ -46,15 +44,14 @@ def parse(lines: typing.Iterator[str]) -> typing.Iterator[dict[str, str]]:
 
         yield move
 
+compute_part2 = functools.partial(compute, parse=parse, process=process)
+
 def main():
-    with open("input") as f:
-        lines = (line.rstrip("\r\n") for line in f)
+    inputpath = pathlib.Path(__file__).parent\
+        .joinpath("data", "input").absolute()
+    result = compute_part2(inputpath)
 
-        total_score = 0
-        for move in parse(lines):
-            total_score += round_score(move)
-
-    print("Total score", total_score)
+    print("Result", result)
 
 
 if __name__ == "__main__":

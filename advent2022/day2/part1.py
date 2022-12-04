@@ -1,5 +1,8 @@
+import functools
+import pathlib
 import typing
-import re
+
+from advent2022 import compute
 
 ROCK = "rock"
 PAPER = "paper"
@@ -41,16 +44,17 @@ def round_score(move: dict[str, str]) -> int:
 
     return choice_score + outcome_score
 
+def process(data: typing.Iterator[dict[str, str]]) -> int:
+    return sum(round_score(move) for move in data)
+
+compute_part1 = functools.partial(compute, parse=parse, process=process)
 
 def main():
-    with open("input") as f:
-        lines = (line.rstrip("\r\n") for line in f)
+    inputpath = pathlib.Path(__file__).parent\
+        .joinpath("data", "input").absolute()
+    result = compute_part1(inputpath)
 
-        total_score = 0
-        for move in parse(lines):
-            total_score += round_score(move)
-
-    print("Total score", total_score)
+    print("Result", result)
 
 
 if __name__ == "__main__":
